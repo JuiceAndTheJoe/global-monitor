@@ -41,6 +41,7 @@ const limiter = rateLimit({
   max: 100, // Limit each IP to 100 requests per windowMs
   standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
   legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+  skip: (req) => req.path === '/api/health', // Skip rate limiting for health checks
   message: {
     type: 'error',
     timestamp: Date.now(),
@@ -49,7 +50,7 @@ const limiter = rateLimit({
   }
 });
 
-// Apply rate limiting to all API routes
+// Apply rate limiting to all API routes (except /api/health)
 app.use('/api/', limiter);
 
 // Middleware
