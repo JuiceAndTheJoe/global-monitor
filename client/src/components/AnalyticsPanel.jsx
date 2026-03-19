@@ -88,9 +88,9 @@ function AnalyticsPanel({ flights, earthquakes, satellites, ships, weather }) {
   const weatherStats = useMemo(() => {
     if (!weather || !weather.length) return null;
 
-    const severityCount = { extreme: 0, severe: 0, moderate: 0, minor: 0 };
+    const severityCount = { emergency: 0, warning: 0, watch: 0, advisory: 0 };
     weather.forEach(alert => {
-      const severity = alert.properties.severity?.toLowerCase() || 'unknown';
+      const severity = (alert.severity || 'unknown').toLowerCase();
       if (severityCount[severity] !== undefined) {
         severityCount[severity]++;
       }

@@ -112,7 +112,7 @@ const WeatherMarker = memo(function WeatherMarker({ event }) {
 
   // Build info rows for popup
   const infoRows = [
-    { label: 'Severity', value: event.severity.toUpperCase() },
+    { label: 'Severity', value: (event.severity || 'unknown').toUpperCase() },
     { label: 'Area', value: event.area || 'Unknown' }
   ];
 
@@ -199,7 +199,7 @@ const WeatherPolygon = memo(function WeatherPolygon({ event }) {
         <InfoPopup
           title={event.headline || event.eventType}
           rows={[
-            { label: 'Severity', value: event.severity.toUpperCase() },
+            { label: 'Severity', value: (event.severity || 'unknown').toUpperCase() },
             { label: 'Area', value: event.area || 'Unknown' }
           ]}
         />

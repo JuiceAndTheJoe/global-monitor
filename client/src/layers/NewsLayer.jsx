@@ -74,7 +74,7 @@ const NewsMarker = memo(function NewsMarker({ event }) {
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <span style={{ fontSize: '18px' }}>{icon}</span>
               <span style={{ fontSize: '12px', fontWeight: 'bold' }}>
-                {event.properties.type.toUpperCase()}
+                {(event.properties.type || 'news').toUpperCase()}
               </span>
             </div>
           }
@@ -93,8 +93,8 @@ const NewsMarker = memo(function NewsMarker({ event }) {
             {
               label: 'Tone',
               value: (
-                <span style={{ color: getColorByTone(event.properties.tone) }}>
-                  {event.properties.tone.toFixed(1)}
+                <span style={{ color: getColorByTone(event.properties.tone || 0) }}>
+                  {(event.properties.tone || 0).toFixed(1)}
                 </span>
               )
             },
