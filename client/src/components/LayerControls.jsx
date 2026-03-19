@@ -43,6 +43,45 @@ const LayerControls = memo(function LayerControls({ layers, onToggle }) {
           Satellites
         </label>
       </div>
+
+      <div className="layer-toggle">
+        <input
+          type="checkbox"
+          id="ships-toggle"
+          checked={layers.ships}
+          onChange={() => onToggle('ships')}
+        />
+        <label htmlFor="ships-toggle">
+          <span className="layer-dot ships"></span>
+          Ships
+        </label>
+      </div>
+
+      <div className="layer-toggle">
+        <input
+          type="checkbox"
+          id="weather-toggle"
+          checked={layers.weather}
+          onChange={() => onToggle('weather')}
+        />
+        <label htmlFor="weather-toggle">
+          <span className="layer-dot weather"></span>
+          Weather
+        </label>
+      </div>
+
+      <div className="layer-toggle">
+        <input
+          type="checkbox"
+          id="news-toggle"
+          checked={layers.news}
+          onChange={() => onToggle('news')}
+        />
+        <label htmlFor="news-toggle">
+          <span className="layer-dot news"></span>
+          News
+        </label>
+      </div>
     </div>
   );
 });

@@ -1,5 +1,6 @@
 import { memo, useMemo } from 'react';
-import { LayerGroup, Marker, Popup } from 'react-leaflet';
+import { Marker, Popup } from 'react-leaflet';
+import MarkerClusterGroup from 'react-leaflet-cluster';
 import L from 'leaflet';
 import InfoPopup from '../components/InfoPopup';
 
@@ -63,12 +64,34 @@ const FlightMarker = memo(function FlightMarker({ flight }) {
 const FlightsLayer = memo(function FlightsLayer({ data, visible }) {
   if (!visible || !data.length) return null;
 
+  // Custom cluster icon creator for flights (blue theme)
+  const createClusterCustomIcon = function (cluster) {
+    const count = cluster.getChildCount();
+    let size = 'small';
+    if (count > 100) size = 'large';
+    else if (count > 50) size = 'medium';
+
+    return L.divIcon({
+      html: `<div><span>${count}</span></div>`,
+      className: `marker-cluster marker-cluster-${size} marker-cluster-flights`,
+      iconSize: L.point(40, 40, true)
+    });
+  };
+
   return (
-    <LayerGroup>
+    <MarkerClusterGroup
+      chunkedLoading
+      iconCreateFunction={createClusterCustomIcon}
+      spiderfyOnMaxZoom={true}
+      showCoverageOnHover={false}
+      zoomToBoundsOnClick={true}
+      maxClusterRadius={60}
+      disableClusteringAtZoom={10}
+    >
       {data.map((flight) => (
         <FlightMarker key={flight.id} flight={flight} />
       ))}
-    </LayerGroup>
+    </MarkerClusterGroup>
   );
 }, (prevProps, nextProps) => {
   return prevProps.visible === nextProps.visible &&

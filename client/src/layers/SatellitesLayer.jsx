@@ -1,5 +1,6 @@
 import { memo, useMemo } from 'react';
-import { LayerGroup, CircleMarker, Popup, Marker } from 'react-leaflet';
+import { CircleMarker, Popup, Marker } from 'react-leaflet';
+import MarkerClusterGroup from 'react-leaflet-cluster';
 import L from 'leaflet';
 import InfoPopup from '../components/InfoPopup';
 
@@ -67,12 +68,34 @@ const SatelliteMarker = memo(function SatelliteMarker({ sat }) {
 const SatellitesLayer = memo(function SatellitesLayer({ data, visible }) {
   if (!visible || !data.length) return null;
 
+  // Custom cluster icon creator for satellites (yellow theme)
+  const createClusterCustomIcon = function (cluster) {
+    const count = cluster.getChildCount();
+    let size = 'small';
+    if (count > 100) size = 'large';
+    else if (count > 50) size = 'medium';
+
+    return L.divIcon({
+      html: `<div><span>${count}</span></div>`,
+      className: `marker-cluster marker-cluster-${size} marker-cluster-satellites`,
+      iconSize: L.point(40, 40, true)
+    });
+  };
+
   return (
-    <LayerGroup>
+    <MarkerClusterGroup
+      chunkedLoading
+      iconCreateFunction={createClusterCustomIcon}
+      spiderfyOnMaxZoom={true}
+      showCoverageOnHover={false}
+      zoomToBoundsOnClick={true}
+      maxClusterRadius={70}
+      disableClusteringAtZoom={9}
+    >
       {data.map((sat) => (
         <SatelliteMarker key={sat.id} sat={sat} />
       ))}
-    </LayerGroup>
+    </MarkerClusterGroup>
   );
 }, (prevProps, nextProps) => {
   return prevProps.visible === nextProps.visible &&

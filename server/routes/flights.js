@@ -1,17 +1,18 @@
 import { Router } from 'express';
 import { getFlights } from '../services/opensky.js';
+import { validateBoundingBox } from '../utils/validation.js';
 
 const router = Router();
 
 /**
  * GET /api/flights
  * Query params (optional):
- * - lamin: minimum latitude
- * - lomin: minimum longitude
- * - lamax: maximum latitude
- * - lomax: maximum longitude
+ * - lamin: minimum latitude (-90 to 90)
+ * - lomin: minimum longitude (-180 to 180)
+ * - lamax: maximum latitude (-90 to 90)
+ * - lomax: maximum longitude (-180 to 180)
  */
-router.get('/', async (req, res) => {
+router.get('/', validateBoundingBox, async (req, res) => {
   try {
     // Extract optional bounding box parameters
     const bbox = {};

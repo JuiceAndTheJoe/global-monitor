@@ -35,4 +35,24 @@ export async function fetchSatellites(category) {
   return fetchJSON(url);
 }
 
-export default { fetchFlights, fetchEarthquakes, fetchSatellites };
+export async function fetchShips() {
+  const url = `${API_BASE}/ships`;
+  return fetchJSON(url);
+}
+
+export async function fetchWeather() {
+  const url = `${API_BASE}/weather`;
+  return fetchJSON(url);
+}
+
+export async function fetchNews(options = {}) {
+  let url = `${API_BASE}/news`;
+  const params = new URLSearchParams();
+  if (options.type) params.set('type', options.type);
+  if (options.minTone) params.set('mintone', options.minTone);
+  if (options.maxTone) params.set('maxtone', options.maxTone);
+  if (params.toString()) url += `?${params}`;
+  return fetchJSON(url);
+}
+
+export default { fetchFlights, fetchEarthquakes, fetchSatellites, fetchShips, fetchWeather, fetchNews };

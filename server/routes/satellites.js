@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { getSatellites } from '../services/celestrak.js';
+import { validateCategory } from '../utils/validation.js';
 
 const router = Router();
 
@@ -8,20 +9,9 @@ const router = Router();
  * Query params (optional):
  * - category: Filter by satellite category (iss, starlink, gps, weather)
  */
-router.get('/', async (req, res) => {
+router.get('/', validateCategory, async (req, res) => {
   try {
     const category = req.query.category || null;
-
-    // Validate category if provided
-    const validCategories = ['iss', 'starlink', 'gps', 'weather'];
-    if (category && !validCategories.includes(category)) {
-      return res.status(400).json({
-        type: 'satellites',
-        timestamp: Date.now(),
-        data: [],
-        error: `Invalid category. Must be one of: ${validCategories.join(', ')}`
-      });
-    }
 
     const satellites = await getSatellites(category);
 

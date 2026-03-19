@@ -1,12 +1,19 @@
 import { Router } from 'express';
 import { getEarthquakes, filterByMagnitude } from '../services/usgs.js';
 import { get, set } from '../services/cache.js';
+import { validateMagnitude } from '../utils/validation.js';
 
 const router = Router();
 const CACHE_KEY = 'earthquakes';
 const CACHE_TTL = 60; // 60 seconds
 
-router.get('/', async (req, res) => {
+/**
+ * GET /api/earthquakes
+ * Query params (optional):
+ * - minmag: minimum magnitude (0 to 10)
+ * - maxmag: maximum magnitude (0 to 10)
+ */
+router.get('/', validateMagnitude, async (req, res) => {
   try {
     const { minmag, maxmag } = req.query;
 

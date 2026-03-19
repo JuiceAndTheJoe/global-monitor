@@ -86,6 +86,18 @@ html, body, #root {
   background: #f1c40f;
 }
 
+.layer-dot.ships {
+  background: #16a34a;
+}
+
+.layer-dot.weather {
+  background: #f97316;
+}
+
+.layer-dot.news {
+  background: #a855f7;
+}
+
 /* Loading indicator */
 .loading-indicator {
   position: absolute;
@@ -172,4 +184,459 @@ html, body, #root {
 .satellite-iss {
   border: 2px solid #fff;
   box-shadow: 0 0 8px rgba(241, 196, 15, 0.8);
+}
+
+/* Ship marker */
+.ship-marker {
+  pointer-events: auto;
+}
+
+.ship-marker span {
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.3));
+}
+
+/* Weather marker */
+.weather-marker {
+  pointer-events: auto;
+}
+
+/* Analytics Panel */
+.analytics-panel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 320px;
+  background: rgba(26, 32, 44, 0.95);
+  backdrop-filter: blur(10px);
+  color: #e2e8f0;
+  z-index: 1000;
+  overflow-y: auto;
+  box-shadow: 2px 0 15px rgba(0, 0, 0, 0.5);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+}
+
+.analytics-panel.closed {
+  transform: translateX(-100%);
+}
+
+.analytics-panel.open {
+  transform: translateX(0);
+}
+
+/* Custom scrollbar for analytics panel */
+.analytics-panel::-webkit-scrollbar {
+  width: 8px;
+}
+
+.analytics-panel::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.analytics-panel::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+
+.analytics-panel::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Analytics Header */
+.analytics-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.2);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  backdrop-filter: blur(10px);
+}
+
+.analytics-header h2 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #e2e8f0;
+  margin: 0;
+}
+
+.analytics-close-btn {
+  background: transparent;
+  border: none;
+  color: #cbd5e0;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.2s;
+  line-height: 1;
+}
+
+.analytics-close-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+/* Toggle Button (when closed) */
+.analytics-toggle-btn {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 999;
+  background: rgba(26, 32, 44, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #e2e8f0;
+  font-size: 24px;
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  transition: all 0.2s;
+}
+
+.analytics-toggle-btn:hover {
+  background: rgba(26, 32, 44, 1);
+  transform: scale(1.05);
+}
+
+/* Analytics Content */
+.analytics-content {
+  padding: 20px;
+  flex: 1;
+}
+
+.analytics-section {
+  margin-bottom: 28px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.analytics-section:last-child {
+  border-bottom: none;
+}
+
+.analytics-section h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #e2e8f0;
+  margin: 0 0 12px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.analytics-section h4 {
+  font-size: 12px;
+  font-weight: 500;
+  color: #a0aec0;
+  margin: 12px 0 8px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Statistics Display */
+.stat-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+}
+
+.stat-label {
+  font-size: 13px;
+  color: #cbd5e0;
+}
+
+.stat-value {
+  font-size: 18px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.stat-value.highlight {
+  color: #f1c40f;
+}
+
+/* Stat Breakdown */
+.stat-breakdown {
+  margin-top: 12px;
+}
+
+.stat-item {
+  margin-bottom: 10px;
+}
+
+.stat-item:last-child {
+  margin-bottom: 0;
+}
+
+.stat-item-label {
+  font-size: 12px;
+  color: #cbd5e0;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.stat-bar-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.stat-bar {
+  height: 20px;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+  min-width: 2px;
+}
+
+.stat-bar.flights {
+  background: linear-gradient(90deg, #3498db, #5dade2);
+}
+
+.stat-bar.earthquakes {
+  background: linear-gradient(90deg, #e74c3c, #ec7063);
+}
+
+.stat-bar.satellites {
+  background: linear-gradient(90deg, #f1c40f, #f4d03f);
+}
+
+.stat-bar.ships {
+  background: linear-gradient(90deg, #16a34a, #4ade80);
+}
+
+.stat-bar.weather {
+  background: linear-gradient(90deg, #f97316, #fb923c);
+}
+
+.stat-bar.news {
+  background: linear-gradient(90deg, #a855f7, #c084fc);
+}
+
+.stat-item-value {
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+  min-width: 30px;
+  text-align: right;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .analytics-panel {
+    width: 280px;
+  }
+
+  .analytics-toggle-btn {
+    width: 44px;
+    height: 44px;
+    font-size: 20px;
+  }
+
+  .analytics-header h2 {
+    font-size: 16px;
+  }
+
+  .analytics-section h3 {
+    font-size: 14px;
+  }
+}
+
+/* Ensure analytics panel doesn't overlap layer controls */
+.layer-controls {
+  right: 10px;
+  top: 10px;
+}
+
+/* Adjust loading indicator and connection status to avoid overlap */
+.loading-indicator {
+  left: 10px;
+  bottom: 10px;
+}
+
+.connection-status {
+  right: 10px;
+  bottom: 10px;
+}
+
+/* Marker Cluster Custom Styles */
+/* Flights - Blue Theme */
+.marker-cluster-flights {
+  background-color: rgba(52, 152, 219, 0.6);
+  border: 3px solid #3498db;
+}
+
+.marker-cluster-flights div {
+  background-color: rgba(52, 152, 219, 0.8);
+  color: white;
+  font-weight: bold;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.marker-cluster-flights div span {
+  line-height: 1;
+}
+
+/* Earthquakes - Red Theme */
+.marker-cluster-earthquakes {
+  background-color: rgba(231, 76, 60, 0.6);
+  border: 3px solid #e74c3c;
+}
+
+.marker-cluster-earthquakes div {
+  background-color: rgba(231, 76, 60, 0.8);
+  color: white;
+  font-weight: bold;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.marker-cluster-earthquakes div span {
+  line-height: 1;
+}
+
+/* Satellites - Yellow Theme */
+.marker-cluster-satellites {
+  background-color: rgba(241, 196, 15, 0.6);
+  border: 3px solid #f1c40f;
+}
+
+.marker-cluster-satellites div {
+  background-color: rgba(241, 196, 15, 0.8);
+  color: white;
+  font-weight: bold;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.marker-cluster-satellites div span {
+  line-height: 1;
+}
+
+/* Ships - Green Theme */
+.marker-cluster-ships {
+  background-color: rgba(34, 197, 94, 0.6);
+  border: 3px solid #22c55e;
+}
+
+.marker-cluster-ships div {
+  background-color: rgba(34, 197, 94, 0.8);
+  color: white;
+  font-weight: bold;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.marker-cluster-ships div span {
+  line-height: 1;
+}
+
+/* Weather - Orange Theme */
+.marker-cluster-weather {
+  background-color: rgba(249, 115, 22, 0.6);
+  border: 3px solid #f97316;
+}
+
+.marker-cluster-weather div {
+  background-color: rgba(249, 115, 22, 0.8);
+  color: white;
+  font-weight: bold;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.marker-cluster-weather div span {
+  line-height: 1;
+}
+
+/* News - Purple Theme */
+.marker-cluster-news {
+  background-color: rgba(168, 85, 247, 0.6);
+  border: 3px solid #a855f7;
+}
+
+.marker-cluster-news div {
+  background-color: rgba(168, 85, 247, 0.8);
+  color: white;
+  font-weight: bold;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.marker-cluster-news div span {
+  line-height: 1;
+}
+
+/* News marker */
+.news-marker {
+  pointer-events: auto;
+}
+
+/* Cluster size variations */
+.marker-cluster-small {
+  width: 30px;
+  height: 30px;
+}
+
+.marker-cluster-small div {
+  font-size: 11px;
+}
+
+.marker-cluster-medium {
+  width: 40px;
+  height: 40px;
+}
+
+.marker-cluster-medium div {
+  font-size: 13px;
+}
+
+.marker-cluster-large {
+  width: 50px;
+  height: 50px;
+}
+
+.marker-cluster-large div {
+  font-size: 15px;
+  font-weight: 900;
 }

@@ -1,4 +1,5 @@
 import { WebSocketServer } from 'ws';
+import { WEBSOCKET_COMPRESSION_THRESHOLD } from './config.js';
 
 let wss = null;
 const clients = new Set();
@@ -15,7 +16,7 @@ export function initWebSocket(server) {
       zlibInflateOptions: {
         chunkSize: 10 * 1024
       },
-      threshold: 1024 // Only compress messages > 1KB
+      threshold: WEBSOCKET_COMPRESSION_THRESHOLD // Only compress messages > threshold
     }
   });
 
@@ -74,4 +75,40 @@ export function getClientCount() {
   return clients.size;
 }
 
-export default { initWebSocket, broadcast, getClientCount };
+/**
+ * Gracefully close all WebSocket connections
+ * @param {number} code - WebSocket close code (default: 1001 - Going Away)
+ * @param {string} reason - Close reason
+ */
+export function close(code = 1001, reason = 'Server shutting down') {
+  console.log(`Closing ${clients.size} WebSocket connections...`);
+
+  let closedCount = 0;
+  for (const client of clients) {
+    try {
+      if (client.readyState === 1) { // OPEN
+        client.close(code, reason);
+        closedCount++;
+      }
+    } catch (err) {
+      console.error('Error closing WebSocket client:', err.message);
+    }
+  }
+
+  clients.clear();
+  console.log(`Closed ${closedCount} WebSocket connections`);
+
+  // Close the WebSocket server
+  if (wss) {
+    return new Promise((resolve) => {
+      wss.close(() => {
+        console.log('WebSocket server closed');
+        resolve();
+      });
+    });
+  }
+
+  return Promise.resolve();
+}
+
+export default { initWebSocket, broadcast, getClientCount, close };

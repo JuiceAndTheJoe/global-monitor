@@ -1,5 +1,6 @@
 import * as satellite from 'satellite.js';
 import * as cache from './cache.js';
+import { recordSuccess, recordFailure } from '../utils/metrics.js';
 
 const TLE_CACHE_TTL = 6 * 60 * 60; // 6 hours for TLE data
 const POSITION_CACHE_TTL = 60; // 60 seconds for computed positions
@@ -115,6 +116,10 @@ async function fetchTLEData(category) {
     return tles;
   } catch (error) {
     console.error(`Error fetching TLE data for ${category}:`, error.message);
+
+    // Record failure metric (only for complete failures, not partial)
+    recordFailure('satellites');
+
     // Return cached data if available
     return cache.get(cacheKey) || [];
   }
@@ -169,6 +174,9 @@ export async function getSatellites(categoryFilter = null) {
   // Cache computed positions
   cache.set(positionCacheKey, allSatellites, POSITION_CACHE_TTL);
   console.log(`Computed positions for ${allSatellites.length} satellites`);
+
+  // Record success metric
+  recordSuccess('satellites');
 
   return allSatellites;
 }

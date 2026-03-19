@@ -1,4 +1,5 @@
 import * as cache from './cache.js';
+import { recordSuccess, recordFailure } from '../utils/metrics.js';
 
 const OPENSKY_API = 'https://opensky-network.org/api/states/all';
 const CACHE_KEY = 'opensky_flights';
@@ -89,9 +90,15 @@ async function fetchFlights(bbox, cacheKey) {
     // Reset error counter on success
     consecutiveErrors = 0;
 
+    // Record success metric
+    recordSuccess('flights');
+
     return flights;
   } catch (error) {
     console.error('Error fetching flights from OpenSky:', error.message);
+
+    // Record failure metric
+    recordFailure('flights');
 
     // Exponential backoff on errors
     consecutiveErrors++;

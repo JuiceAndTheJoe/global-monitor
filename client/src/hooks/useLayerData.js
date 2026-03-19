@@ -1,11 +1,14 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { fetchFlights, fetchEarthquakes, fetchSatellites } from '../utils/api';
+import { fetchFlights, fetchEarthquakes, fetchSatellites, fetchShips, fetchWeather, fetchNews } from '../utils/api';
 import useWebSocket from './useWebSocket';
 
 function useLayerData() {
   const [flights, setFlights] = useState([]);
   const [earthquakes, setEarthquakes] = useState([]);
   const [satellites, setSatellites] = useState([]);
+  const [ships, setShips] = useState([]);
+  const [weather, setWeather] = useState([]);
+  const [news, setNews] = useState([]);
   const [loading, setLoading] = useState(true);
   const initialLoadDone = useRef(false);
 
@@ -21,6 +24,15 @@ function useLayerData() {
       case 'satellites':
         setSatellites(message.data);
         break;
+      case 'ships':
+        setShips(message.data);
+        break;
+      case 'weather':
+        setWeather(message.data);
+        break;
+      case 'news':
+        setNews(message.data);
+        break;
     }
   }, []);
 
@@ -30,15 +42,21 @@ function useLayerData() {
   const fetchAllData = useCallback(async () => {
     setLoading(true);
     try {
-      const [flightsData, earthquakesData, satellitesData] = await Promise.all([
+      const [flightsData, earthquakesData, satellitesData, shipsData, weatherData, newsData] = await Promise.all([
         fetchFlights(),
         fetchEarthquakes(),
-        fetchSatellites()
+        fetchSatellites(),
+        fetchShips(),
+        fetchWeather(),
+        fetchNews()
       ]);
 
       setFlights(flightsData);
       setEarthquakes(earthquakesData);
       setSatellites(satellitesData);
+      setShips(shipsData);
+      setWeather(weatherData);
+      setNews(newsData);
       initialLoadDone.current = true;
     } catch (err) {
       console.error('Failed to fetch data:', err);
@@ -67,6 +85,9 @@ function useLayerData() {
     flights,
     earthquakes,
     satellites,
+    ships,
+    weather,
+    news,
     loading,
     connected,
     reconnect,

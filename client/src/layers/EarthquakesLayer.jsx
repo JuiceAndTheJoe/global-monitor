@@ -1,5 +1,7 @@
 import { memo, useMemo } from 'react';
-import { LayerGroup, CircleMarker, Popup } from 'react-leaflet';
+import { CircleMarker, Popup } from 'react-leaflet';
+import MarkerClusterGroup from 'react-leaflet-cluster';
+import L from 'leaflet';
 import InfoPopup from '../components/InfoPopup';
 
 // Calculate radius based on magnitude (exponential scale)
@@ -60,12 +62,34 @@ const EarthquakeMarker = memo(function EarthquakeMarker({ quake }) {
 const EarthquakesLayer = memo(function EarthquakesLayer({ data, visible }) {
   if (!visible || !data.length) return null;
 
+  // Custom cluster icon creator for earthquakes (red theme)
+  const createClusterCustomIcon = function (cluster) {
+    const count = cluster.getChildCount();
+    let size = 'small';
+    if (count > 50) size = 'large';
+    else if (count > 20) size = 'medium';
+
+    return L.divIcon({
+      html: `<div><span>${count}</span></div>`,
+      className: `marker-cluster marker-cluster-${size} marker-cluster-earthquakes`,
+      iconSize: L.point(40, 40, true)
+    });
+  };
+
   return (
-    <LayerGroup>
+    <MarkerClusterGroup
+      chunkedLoading
+      iconCreateFunction={createClusterCustomIcon}
+      spiderfyOnMaxZoom={true}
+      showCoverageOnHover={false}
+      zoomToBoundsOnClick={true}
+      maxClusterRadius={80}
+      disableClusteringAtZoom={8}
+    >
       {data.map((quake) => (
         <EarthquakeMarker key={quake.id} quake={quake} />
       ))}
-    </LayerGroup>
+    </MarkerClusterGroup>
   );
 }, (prevProps, nextProps) => {
   return prevProps.visible === nextProps.visible &&

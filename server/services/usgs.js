@@ -1,5 +1,6 @@
 // USGS Earthquake API service
 import * as cache from './cache.js';
+import { recordSuccess, recordFailure } from '../utils/metrics.js';
 
 const USGS_API_URL = 'https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson';
 const CACHE_KEY = 'usgs_earthquakes';
@@ -42,9 +43,16 @@ export async function getEarthquakes() {
     cache.set(CACHE_KEY, earthquakes, CACHE_TTL);
     console.log(`Fetched ${earthquakes.length} earthquakes from USGS`);
 
+    // Record success metric
+    recordSuccess('earthquakes');
+
     return earthquakes;
   } catch (error) {
     console.error('Error fetching earthquake data:', error.message);
+
+    // Record failure metric
+    recordFailure('earthquakes');
+
     // Return stale cache if available
     const stale = cache.get(CACHE_KEY);
     if (stale) return stale;
