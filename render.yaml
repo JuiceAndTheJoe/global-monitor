@@ -1,0 +1,47 @@
+# Render Blueprint - Global Monitor Dashboard
+# Deploy both frontend and backend with one click
+
+services:
+  # Backend API + WebSocket Server
+  - type: web
+    name: global-monitor-api
+    runtime: node
+    region: oregon
+    plan: free
+    rootDir: server
+    buildCommand: npm install
+    startCommand: node index.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: CORS_ORIGIN
+        sync: false  # Set manually after frontend deploys
+      - key: OPENWEATHER_API_KEY
+        sync: false  # Optional: Add for global weather data
+    healthCheckPath: /api/health
+
+  # Frontend Static Site
+  - type: web
+    name: global-monitor
+    runtime: static
+    region: oregon
+    plan: free
+    rootDir: client
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    headers:
+      - path: /*
+        name: Cache-Control
+        value: public, max-age=0, must-revalidate
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          name: global-monitor-api
+          type: web
+          property: host

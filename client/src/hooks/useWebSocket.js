@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { WS_URL } from '../utils/config.js';
 
 function useWebSocket(onMessage) {
   const [connected, setConnected] = useState(false);
@@ -23,8 +24,7 @@ function useWebSocket(onMessage) {
       return;
     }
 
-    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    const wsUrl = `${protocol}//${window.location.hostname}:3001`;
+    const wsUrl = WS_URL;
 
     try {
       wsRef.current = new WebSocket(wsUrl);
