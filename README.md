@@ -2,7 +2,13 @@
 
 A real-time geopolitical monitoring dashboard displaying flights, earthquakes, satellites, maritime traffic, weather alerts, and global news events on an interactive world map.
 
-![Dashboard Preview](https://img.shields.io/badge/status-active-brightgreen) ![License](https://img.shields.io/badge/license-MIT-blue)
+![Dashboard Preview](https://img.shields.io/badge/status-active-brightgreen) ![License](https://img.shields.io/badge/license-MIT-blue) ![Deployment](https://img.shields.io/badge/deployed-Render-46E3B7)
+
+## Live Demo
+
+**[https://global-monitor.onrender.com](https://global-monitor.onrender.com)**
+
+> Note: The backend runs on Render's free tier and may sleep after 15 minutes of inactivity. The first request will wake it up (~30 seconds).
 
 ## Features
 
@@ -242,6 +248,27 @@ npm run dev:client
 ```
 
 ## Production Deployment
+
+### Deploy to Render (Recommended)
+
+This project includes a `render.yaml` blueprint for one-click deployment:
+
+1. Fork this repository
+2. Go to [Render Dashboard](https://dashboard.render.com)
+3. Click **New** → **Blueprint**
+4. Connect your GitHub repo and select the `master` branch
+5. Set environment variables:
+   - `CORS_ORIGIN`: Your frontend URL (e.g., `https://global-monitor.onrender.com`)
+   - `OPENWEATHER_API_KEY`: Optional, for global weather data
+6. Click **Apply**
+
+This deploys:
+| Service | Type | URL |
+|---------|------|-----|
+| `global-monitor-api` | Web Service | `https://global-monitor-api.onrender.com` |
+| `global-monitor` | Static Site | `https://global-monitor.onrender.com` |
+
+### Manual Deployment
 
 ```bash
 # Build client
