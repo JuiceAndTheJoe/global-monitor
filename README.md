@@ -6,7 +6,7 @@ A real-time geopolitical monitoring dashboard displaying flights, earthquakes, s
 
 ## Live Demo
 
-**[https://global-monitor.onrender.com](https://global-monitor.onrender.com)**
+**[https://global-monitor-wgkt.onrender.com](https://global-monitor-wgkt.onrender.com)**
 
 > Note: The backend runs on Render's free tier and may sleep after 15 minutes of inactivity. The first request will wake it up (~30 seconds).
 
